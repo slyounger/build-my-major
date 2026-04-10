@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Build My Major — SEVI | Walton College of Business</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-brand">
+                <h1>Build My Major</h1>
+                <p class="subtitle">Strategy, Entrepreneurship & Venture Innovation</p>
+                <p class="school">Sam M. Walton College of Business &bull; University of Arkansas</p>
+            </div>
+        </header>
+
+        <!-- Intro Screen: The Fork -->
+        <section id="intro" class="screen active">
+            <div class="card intro-card">
+                <h2>What brings you here?</h2>
+                <p>We'll help you explore SEVI courses tailored to your interests and goals.</p>
+                <div class="fork-buttons">
+                    <button class="btn btn-fork" onclick="startPath('build')">
+                        <span class="fork-title">I'm a SEVI major (or want to be)</span>
+                        <span class="fork-desc">Build a personalized course plan for the Innovation & Entrepreneurship major</span>
+                    </button>
+                    <button class="btn btn-fork" onclick="startPath('explore')">
+                        <span class="fork-title">I'm curious about SEVI</span>
+                        <span class="fork-desc">See what a SEVI second major or minor would look like alongside your current major</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ PATH 1: BUILD (current/prospective SEVI majors) ============ -->
+        <section id="quiz-build" class="screen">
+            <div class="progress-bar">
+                <div class="progress-fill" id="buildProgressFill"></div>
+            </div>
+            <div class="progress-text" id="buildProgressText">Step 1 of 2</div>
+
+            <!-- Build Q1: Basics (Name, Majors, Minor, Year) -->
+            <div class="question-card" id="build-q1">
+                <h2>Let's start with the basics</h2>
+
+                <div class="optional-group">
+                    <label class="field-label">Name <span style="color: var(--razorback-red)">*</span></label>
+                    <input type="text" id="buildName" class="text-input" placeholder="Your name" autocomplete="off">
+                </div>
+
+                <div class="optional-group">
+                    <label class="field-label">Year in school <span style="color: var(--razorback-red)">*</span></label>
+                    <div class="option-grid year-grid">
+                        <button class="option-btn" data-value="Freshman" onclick="selectSingle(this, 'buildYear')">Freshman</button>
+                        <button class="option-btn" data-value="Sophomore" onclick="selectSingle(this, 'buildYear')">Sophomore</button>
+                        <button class="option-btn" data-value="Junior" onclick="selectSingle(this, 'buildYear')">Junior</button>
+                        <button class="option-btn" data-value="Senior" onclick="selectSingle(this, 'buildYear')">Senior</button>
+                    </div>
+                </div>
+
+                <div class="optional-group">
+                    <label class="field-label">Secondary major <span style="color: var(--mid-gray); font-weight: 400">(optional)</span></label>
+                    <div class="select-wrapper">
+                        <select id="buildSecondaryMajor" class="select-input">
+                            <option value="" selected>None</option>
+                            <option value="Accounting">Accounting</option>
+                            <option value="Economics">Economics</option>
+                            <option value="Finance">Finance</option>
+                            <option value="General Business">General Business</option>
+                            <option value="Human Resource Management">Human Resource Management</option>
+                            <option value="Information Systems">Information Systems</option>
+                            <option value="International Business">International Business</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="Supply Chain Management">Supply Chain Management</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div id="buildSecondaryMajorOther" class="other-field" style="display:none">
+                        <input type="text" id="buildSecondaryMajorOtherText" class="text-input" placeholder="Enter your major">
+                    </div>
+                </div>
+
+                <div class="optional-group">
+                    <label class="field-label">Minor(s) <span style="color: var(--mid-gray); font-weight: 400">(optional)</span></label>
+                    <input type="text" id="buildMinors" class="text-input" placeholder="e.g., Spanish, Data Analytics">
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" onclick="showScreen('intro')">Back</button>
+                    <button class="btn btn-primary" onclick="buildNext(1)">Next</button>
+                </div>
+            </div>
+
+            <!-- Build Q2: Interests -->
+            <div class="question-card" id="build-q2" style="display:none">
+                <h2>What sounds most like you?</h2>
+                <p class="question-hint">Pick 2-3 that resonate</p>
+                <div class="option-grid interest-grid">
+                    <button class="option-btn interest-btn" data-value="start_own" onclick="toggleInterest(this)">
+                        I want to start my own thing someday
+                    </button>
+                    <button class="option-btn interest-btn" data-value="products_ideas" onclick="toggleInterest(this)">
+                        I'm drawn to how new products and ideas come to life
+                    </button>
+                    <button class="option-btn interest-btn" data-value="social_impact" onclick="toggleInterest(this)">
+                        I care about making a difference — social impact, sustainability
+                    </button>
+                    <button class="option-btn interest-btn" data-value="money_funding" onclick="toggleInterest(this)">
+                        I want to understand money — how businesses get funded, how deals work
+                    </button>
+                    <button class="option-btn interest-btn" data-value="marketing" onclick="toggleInterest(this)">
+                        I'm fascinated by what makes people buy things
+                    </button>
+                    <button class="option-btn interest-btn" data-value="leadership" onclick="toggleInterest(this)">
+                        I want to lead people and shape how organizations work
+                    </button>
+                    <button class="option-btn interest-btn" data-value="outdoors" onclick="toggleInterest(this)">
+                        I love the outdoors and want to work in that space
+                    </button>
+                    <button class="option-btn interest-btn" data-value="global" onclick="toggleInterest(this)">
+                        I'm interested in global/international business
+                    </button>
+                    <button class="option-btn interest-btn" data-value="operations" onclick="toggleInterest(this)">
+                        I like the behind-the-scenes — operations, logistics, how things actually get done
+                    </button>
+                    <button class="option-btn interest-btn" data-value="numbers" onclick="toggleInterest(this)">
+                        I want to understand the numbers — accounting, taxes, legal side of business
+                    </button>
+                    <button class="option-btn interest-btn" data-value="other" onclick="toggleInterest(this)">
+                        Other
+                    </button>
+                </div>
+                <div id="interestOtherField" class="other-field" style="display:none; margin-top: 12px;">
+                    <input type="text" id="interestOtherText" class="text-input" placeholder="Tell us more — what interests you?">
+                </div>
+
+                <div class="optional-group" style="margin-top: 24px;">
+                    <label class="field-label">Anything else we should know? <span style="color: var(--mid-gray); font-weight: 400">(optional)</span></label>
+                    <textarea id="buildAnythingElse" class="text-input textarea" placeholder="Tell us about a job you'd love, a problem you want to solve, or something that excites you about business."></textarea>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" onclick="buildBack(2)">Back</button>
+                    <button class="btn btn-primary" onclick="generateBuildResults()">Build My Major</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ PATH 2: EXPLORE (curious about adding SEVI) ============ -->
+        <section id="quiz-explore" class="screen">
+            <div class="progress-bar">
+                <div class="progress-fill" id="exploreProgressFill" style="width: 50%"></div>
+            </div>
+            <div class="progress-text" id="exploreProgressText">Step 1 of 2</div>
+
+            <!-- Explore Q1: Basics -->
+            <div class="question-card" id="explore-q1">
+                <h2>Tell us about yourself</h2>
+
+                <div class="optional-group">
+                    <label class="field-label">Name <span style="color: var(--razorback-red)">*</span></label>
+                    <input type="text" id="exploreName" class="text-input" placeholder="Your name" autocomplete="off">
+                </div>
+
+                <div class="optional-group">
+                    <label class="field-label">Current major <span style="color: var(--razorback-red)">*</span></label>
+                    <div class="select-wrapper">
+                        <select id="exploreMajor" class="select-input">
+                            <option value="" disabled selected>Select your major</option>
+                            <option value="Accounting">Accounting</option>
+                            <option value="Economics">Economics</option>
+                            <option value="Finance">Finance</option>
+                            <option value="General Business">General Business</option>
+                            <option value="Human Resource Management">Human Resource Management</option>
+                            <option value="Information Systems">Information Systems</option>
+                            <option value="International Business">International Business</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="Supply Chain Management">Supply Chain Management</option>
+                            <option value="Undecided">Undecided</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div id="exploreMajorOther" class="other-field" style="display:none">
+                        <input type="text" id="exploreMajorOtherText" class="text-input" placeholder="Enter your major">
+                    </div>
+                </div>
+
+                <div class="optional-group">
+                    <label class="field-label">Year in school <span style="color: var(--razorback-red)">*</span></label>
+                    <div class="option-grid year-grid">
+                        <button class="option-btn" data-value="Freshman" onclick="selectSingle(this, 'exploreYear')">Freshman</button>
+                        <button class="option-btn" data-value="Sophomore" onclick="selectSingle(this, 'exploreYear')">Sophomore</button>
+                        <button class="option-btn" data-value="Junior" onclick="selectSingle(this, 'exploreYear')">Junior</button>
+                        <button class="option-btn" data-value="Senior" onclick="selectSingle(this, 'exploreYear')">Senior</button>
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" onclick="showScreen('intro')">Back</button>
+                    <button class="btn btn-primary" onclick="exploreNext(1)">Next</button>
+                </div>
+            </div>
+
+            <!-- Explore Q2: Interests (same options, lighter framing) -->
+            <div class="question-card" id="explore-q2" style="display:none">
+                <h2>What draws you to entrepreneurship?</h2>
+                <p class="question-hint">Pick 2-3 that resonate</p>
+                <div class="option-grid interest-grid">
+                    <button class="option-btn interest-btn" data-value="start_own" onclick="toggleExploreInterest(this)">
+                        I want to start my own thing someday
+                    </button>
+                    <button class="option-btn interest-btn" data-value="products_ideas" onclick="toggleExploreInterest(this)">
+                        I'm drawn to how new products and ideas come to life
+                    </button>
+                    <button class="option-btn interest-btn" data-value="social_impact" onclick="toggleExploreInterest(this)">
+                        I care about making a difference — social impact, sustainability
+                    </button>
+                    <button class="option-btn interest-btn" data-value="money_funding" onclick="toggleExploreInterest(this)">
+                        I want to understand money — how businesses get funded, how deals work
+                    </button>
+                    <button class="option-btn interest-btn" data-value="marketing" onclick="toggleExploreInterest(this)">
+                        I'm fascinated by what makes people buy things
+                    </button>
+                    <button class="option-btn interest-btn" data-value="leadership" onclick="toggleExploreInterest(this)">
+                        I want to lead people and shape how organizations work
+                    </button>
+                    <button class="option-btn interest-btn" data-value="outdoors" onclick="toggleExploreInterest(this)">
+                        I love the outdoors and want to work in that space
+                    </button>
+                    <button class="option-btn interest-btn" data-value="global" onclick="toggleExploreInterest(this)">
+                        I'm interested in global/international business
+                    </button>
+                    <button class="option-btn interest-btn" data-value="operations" onclick="toggleExploreInterest(this)">
+                        I like the behind-the-scenes — operations, logistics, how things actually get done
+                    </button>
+                    <button class="option-btn interest-btn" data-value="numbers" onclick="toggleExploreInterest(this)">
+                        I want to understand the numbers — accounting, taxes, legal side of business
+                    </button>
+                    <button class="option-btn interest-btn" data-value="other" onclick="toggleExploreInterest(this)">
+                        Other
+                    </button>
+                </div>
+                <div id="exploreInterestOtherField" class="other-field" style="display:none; margin-top: 12px;">
+                    <input type="text" id="exploreInterestOtherText" class="text-input" placeholder="Tell us more — what interests you?">
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" onclick="exploreBack(2)">Back</button>
+                    <button class="btn btn-primary" onclick="generateExploreResults()">Show Me What SEVI Looks Like</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ RESULTS: BUILD PATH ============ -->
+        <section id="results-build" class="screen">
+            <div class="results-container">
+                <div class="card results-narrative" id="buildResultsNarrative"></div>
+
+                <div class="card results-section">
+                    <h3>Required</h3>
+                    <div id="buildResultsRequired"></div>
+                </div>
+
+                <div class="card results-section">
+                    <h3>Recommended Thematic Core</h3>
+                    <div id="buildResultsThematic"></div>
+                </div>
+
+                <div class="card results-section">
+                    <h3>Recommended Electives — Group 1</h3>
+                    <p class="section-hint">SEVI & Management courses</p>
+                    <div id="buildResultsGroup1"></div>
+                </div>
+
+                <div class="card results-section">
+                    <h3>Recommended Electives — Group 2</h3>
+                    <p class="section-hint">Cross-department courses</p>
+                    <div id="buildResultsGroup2"></div>
+                </div>
+
+                <div class="card results-section" id="buildAlternativesSection" style="display:none">
+                    <h3>Alternatives</h3>
+                    <p class="section-hint">Other courses that might interest you</p>
+                    <div id="buildResultsAlternatives"></div>
+                </div>
+
+                <div class="results-actions">
+                    <button class="btn btn-secondary" onclick="retakeQuiz()">Retake the Quiz</button>
+                    <button class="btn btn-primary" onclick="showSequencing()">Next: Build My Schedule</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ RESULTS: EXPLORE PATH ============ -->
+        <section id="results-explore" class="screen">
+            <div class="results-container">
+                <div class="card results-narrative" id="exploreResultsNarrative"></div>
+
+                <div class="card results-section" id="exploreOverlapSection" style="display:none">
+                    <h3>Courses That Already Count</h3>
+                    <p class="section-hint">These courses overlap with your current major — double win</p>
+                    <div id="exploreResultsOverlap"></div>
+                </div>
+
+                <div class="card results-section">
+                    <h3>What You'd Take for SEVI</h3>
+                    <p class="section-hint">Here's what the Innovation & Entrepreneurship major adds to your degree</p>
+                    <div id="exploreResultsCourses"></div>
+                </div>
+
+                <div class="card results-section">
+                    <h3>Courses We'd Recommend Based on Your Interests</h3>
+                    <p class="section-hint">These electives align with what drew you to SEVI</p>
+                    <div id="exploreResultsRecommended"></div>
+                </div>
+
+                <div class="card explore-cta">
+                    <h3>Interested?</h3>
+                    <p>Talk to a SEVI advisor to explore adding Innovation & Entrepreneurship to your degree. It may be more doable than you think — especially with the courses that already overlap.</p>
+                </div>
+
+                <div class="results-actions">
+                    <button class="btn btn-secondary" onclick="retakeQuiz()">Start Over</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Course Popover (hidden, positioned dynamically) -->
+        <div id="coursePopover" class="popover" style="display:none">
+            <div class="popover-header">
+                <span id="popoverTitle"></span>
+                <button class="popover-close" onclick="closePopover()">&times;</button>
+            </div>
+            <div id="popoverBody"></div>
+        </div>
+    </div>
+
+    <script src="courses.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
