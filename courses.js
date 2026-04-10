@@ -330,3 +330,97 @@ const DOUBLE_COUNT = {
     "Information Systems": ["ISYS 22603"],
     "Human Resource Management": ["MGMT 49403", "MGMT 49503"]
 };
+
+// OEI Programs
+const OEI_PROGRAMS = {
+    "mcmillon_studio": {
+        title: "McMillon Studio Design Teams",
+        description: "Apply design thinking and product management tools to solve real-world problems with industry partners.",
+        url: "https://entrepreneurship.uark.edu/"
+    },
+    "venture_intern": {
+        title: "Venture Intern Program",
+        description: "Paid internships in local startups, non-profits, or seed-stage ventures.",
+        url: "https://entrepreneurship.uark.edu/"
+    },
+    "student_incubator": {
+        title: "Student Business Incubator",
+        description: "10-week immersive summer program for committed undergraduate entrepreneurs.",
+        url: "https://entrepreneurship.uark.edu/"
+    },
+    "side_hustle_hub": {
+        title: "Side Hustle Hub",
+        description: "Support and community for students already running a business or developing an idea.",
+        url: "https://entrepreneurship.uark.edu/"
+    },
+    "greenhouse": {
+        title: "Greenhouse Outdoor Recreation Program",
+        description: "Training and seed funding for early-stage entrepreneurs in the outdoor industry.",
+        url: "https://entrepreneurship.uark.edu/"
+    },
+    "seed_funding": {
+        title: "Seed Funding Pitch Competition",
+        description: "Pitch your idea — funding available for students exploring, prototyping, and commercializing ventures.",
+        url: "https://entrepreneurship.uark.edu/"
+    },
+    "heartland": {
+        title: "Heartland Challenge",
+        description: "Graduate student startup competition.",
+        url: "https://entrepreneurship.uark.edu/"
+    },
+    "venture_mentoring": {
+        title: "Venture Mentoring Service",
+        description: "One-on-one mentorship with experienced business advisors to accelerate your venture.",
+        url: "https://entrepreneurship.uark.edu/"
+    },
+    "accounting_support": {
+        title: "Accounting Professional Support",
+        description: "Expert consultation on financial management and accounting for startups.",
+        url: "https://entrepreneurship.uark.edu/"
+    },
+    "law_project": {
+        title: "Entrepreneurial Law Project",
+        description: "Free legal education and programming for Arkansas-based entrepreneurs.",
+        url: "https://entrepreneurship.uark.edu/"
+    },
+    "start_smart": {
+        title: "Start Smart",
+        description: "Foundational program to help you evaluate and launch a new business idea.",
+        url: "https://entrepreneurship.uark.edu/"
+    },
+    "pathfinders": {
+        title: "Pathfinders",
+        description: "Open to all majors — helps students find their entrepreneurial path.",
+        url: "https://entrepreneurship.uark.edu/"
+    },
+    "design_collab": {
+        title: "Design & Entrepreneurship Collaborative",
+        description: "Interdisciplinary initiative combining design thinking with entrepreneurial development.",
+        url: "https://entrepreneurship.uark.edu/"
+    },
+    "workshops": {
+        title: "OEI Workshops & Events",
+        description: "Speakers, events, and educational sessions on entrepreneurship and innovation topics.",
+        url: "https://entrepreneurship.uark.edu/"
+    },
+    "office_hours": {
+        title: "OEI Office Hours",
+        description: "Drop-in consultations with subject matter experts on your business idea or career questions.",
+        url: "https://entrepreneurship.uark.edu/"
+    }
+};
+
+// Interest-to-OEI mapping
+const OEI_MAP = {
+    start_own: ["student_incubator", "seed_funding", "side_hustle_hub", "venture_mentoring", "start_smart"],
+    products_ideas: ["mcmillon_studio", "design_collab", "seed_funding", "student_incubator"],
+    social_impact: ["venture_intern", "pathfinders", "start_smart"],
+    money_funding: ["seed_funding", "accounting_support", "venture_mentoring"],
+    marketing: ["mcmillon_studio", "venture_intern", "workshops"],
+    leadership: ["venture_intern", "mcmillon_studio", "workshops"],
+    outdoors: ["greenhouse", "seed_funding", "venture_mentoring"],
+    global: ["venture_intern", "pathfinders", "workshops"],
+    operations: ["start_smart", "venture_mentoring", "venture_intern"],
+    numbers: ["law_project", "accounting_support", "start_smart"],
+    other: ["pathfinders", "office_hours", "workshops"]
+};

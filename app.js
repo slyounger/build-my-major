@@ -216,6 +216,10 @@ function generateBuildResults() {
         document.getElementById('buildResultsAlternatives').innerHTML = alternatives.map(c => renderCourseItem(c, secondaryMajor)).join('');
     }
 
+    // OEI recommendations
+    const oeiRecs = getOEIRecommendations(selectedInterests);
+    document.getElementById('buildResultsOEI').innerHTML = oeiRecs.map(renderOEIItem).join('');
+
     showScreen('results-build');
 }
 
@@ -282,6 +286,10 @@ function generateExploreResults() {
 
     // Interest-based recommendations
     document.getElementById('exploreResultsRecommended').innerHTML = recommended.map(c => renderCourseItem(c, currentMajor)).join('');
+
+    // OEI recommendations
+    const oeiRecs = getOEIRecommendations(selectedExploreInterests);
+    document.getElementById('exploreResultsOEI').innerHTML = oeiRecs.map(renderOEIItem).join('');
 
     showScreen('results-explore');
 }
@@ -365,6 +373,33 @@ function renderCourseItem(code, otherMajor) {
         '<div><div class="course-code">' + code + '</div>' +
         '<div class="course-name">' + course.title + '</div></div>' +
         badge + '</div>';
+}
+
+// --- OEI Programs ---
+
+function getOEIRecommendations(interests) {
+    const scores = {};
+    interests.forEach((interest, idx) => {
+        const weight = interests.length - idx;
+        (OEI_MAP[interest] || []).forEach(id => {
+            scores[id] = (scores[id] || 0) + weight;
+        });
+    });
+
+    // Return top 3-4 unique programs
+    return Object.keys(scores)
+        .sort((a, b) => scores[b] - scores[a])
+        .slice(0, 4);
+}
+
+function renderOEIItem(programId) {
+    const program = OEI_PROGRAMS[programId];
+    if (!program) return '';
+
+    return '<a class="oei-item" href="' + program.url + '" target="_blank">' +
+        '<div class="oei-name">' + program.title + '</div>' +
+        '<div class="oei-desc">' + program.description + '</div>' +
+        '</a>';
 }
 
 // --- Popover ---

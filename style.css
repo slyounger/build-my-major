@@ -428,6 +428,34 @@ body {
     white-space: nowrap;
 }
 
+/* OEI Program Items */
+.oei-item {
+    display: block;
+    padding: 14px 16px;
+    border: 1px solid var(--light-gray);
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.15s;
+}
+
+.oei-item:hover {
+    border-color: var(--accent);
+    background: var(--accent-light);
+}
+
+.oei-name {
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.oei-desc {
+    font-size: 0.85rem;
+    color: var(--mid-gray);
+    line-height: 1.4;
+}
+
 /* Popover */
 .popover {
     position: fixed;
