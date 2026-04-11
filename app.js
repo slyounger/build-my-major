@@ -167,24 +167,24 @@ function generateBuildResults() {
     const thematicOptions = Object.keys(COURSES).filter(c => COURSES[c].groups.includes('thematic'));
     const thematic = thematicOptions.sort((a, b) => (scores[b] || 0) - (scores[a] || 0))[0];
 
-    // Pick Group 1 — top 3 from track-matched courses
-    const group1 = Object.keys(COURSES)
-        .filter(c => COURSES[c].groups.includes('group1') && c !== thematic)
-        .sort((a, b) => (scores[b] || 0) - (scores[a] || 0))
-        .slice(0, 3);
+    // Identify double-count courses for secondary major
+    const doubleCounts = (secondaryMajor && DOUBLE_COUNT[secondaryMajor]) ? DOUBLE_COUNT[secondaryMajor] : [];
 
-    // Pick Group 2 — boost double-counts for secondary major
-    const group2 = Object.keys(COURSES)
-        .filter(c => COURSES[c].groups.includes('group2'))
-        .sort((a, b) => {
-            let sa = scores[a] || 0, sb = scores[b] || 0;
-            if (secondaryMajor && DOUBLE_COUNT[secondaryMajor]) {
-                if (DOUBLE_COUNT[secondaryMajor].includes(a)) sa += 10;
-                if (DOUBLE_COUNT[secondaryMajor].includes(b)) sb += 10;
-            }
-            return sb - sa;
-        })
-        .slice(0, 3);
+    // Pick Group 1 — force in any double-count courses, fill remaining with top track-matched
+    const group1DoubleCounts = doubleCounts.filter(c => COURSES[c] && COURSES[c].groups.includes('group1') && c !== thematic);
+    const group1Remaining = Object.keys(COURSES)
+        .filter(c => COURSES[c].groups.includes('group1') && c !== thematic && !group1DoubleCounts.includes(c))
+        .sort((a, b) => (scores[b] || 0) - (scores[a] || 0))
+        .slice(0, 3 - group1DoubleCounts.length);
+    const group1 = [...group1DoubleCounts, ...group1Remaining];
+
+    // Pick Group 2 — force in any double-count courses, fill remaining with top track-matched
+    const group2DoubleCounts = doubleCounts.filter(c => COURSES[c] && COURSES[c].groups.includes('group2'));
+    const group2Remaining = Object.keys(COURSES)
+        .filter(c => COURSES[c].groups.includes('group2') && !group2DoubleCounts.includes(c))
+        .sort((a, b) => (scores[b] || 0) - (scores[a] || 0))
+        .slice(0, Math.max(0, 3 - group2DoubleCounts.length));
+    const group2 = [...group2DoubleCounts, ...group2Remaining];
 
     // Alternatives — next best courses not already selected
     const selected = new Set([thematic, ...group1, ...group2, "SEVI 39303"]);
