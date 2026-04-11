@@ -276,16 +276,26 @@ function generateExploreResults() {
         .sort((a, b) => (scores[b] || 0) - (scores[a] || 0))
         .slice(0, 5);
 
-    // Build narrative
-    let narrative = `Hey ${name}! Here's what adding Innovation & Entrepreneurship (SEVI) to your ${currentMajor} degree could look like.`;
-    narrative += ` The SEVI major requires 24 credit hours of major-specific courses: one required course, one thematic core, and six electives split across two groups.`;
+    // Pick thematic based on dominant track
+    const thematicOptions = Object.keys(COURSES).filter(c => COURSES[c].groups.includes('thematic'));
+    const thematic = thematicOptions.sort((a, b) => (scores[b] || 0) - (scores[a] || 0))[0];
+
+    const thematicExplanations = {
+        'SEVI 44303': 'Small Enterprise Management — focuses on the practical challenges of starting and running a business.',
+        'SEVI 32303': 'Corporate Innovation — focuses on how established companies innovate, fail, and succeed.',
+        'SEVI 36703': 'Social Entrepreneurship — explores building ventures that create social value alongside economic value.'
+    };
+
+    // Build narrative using the same combo logic as Build path
+    const narrative = buildNarrative(name, selectedExploreInterests, currentMajor);
+    let exploreExtra = '';
 
     if (overlaps.length > 0) {
-        narrative += ` Great news — ${overlaps.length} course${overlaps.length > 1 ? 's' : ''} from your ${currentMajor} major can double-count toward SEVI, so you're not starting from zero.`;
+        exploreExtra = ' Great news — ' + overlaps.length + ' course' + (overlaps.length > 1 ? 's' : '') + ' from your ' + currentMajor + ' major can double-count toward SEVI, so you\'re not starting from zero.';
     }
 
     // Render
-    document.getElementById('exploreResultsNarrative').innerHTML = '<p>' + narrative + '</p>';
+    document.getElementById('exploreResultsNarrative').innerHTML = '<p>' + narrative + exploreExtra + '</p>';
 
     // Overlap section
     if (overlaps.length > 0) {
@@ -295,17 +305,17 @@ function generateExploreResults() {
         document.getElementById('exploreOverlapSection').style.display = 'none';
     }
 
-    // Core SEVI requirements
+    // Core SEVI requirements — single thematic recommendation
     const coreHTML = renderCourseItem('SEVI 39303', currentMajor);
-    const thematicHTML = ['SEVI 32303', 'SEVI 36703', 'SEVI 44303'].map(c =>
-        renderCourseItem(c, currentMajor)
-    ).join('');
     document.getElementById('exploreResultsCourses').innerHTML =
         '<p class="section-hint" style="margin-bottom:8px"><strong>Required:</strong></p>' + coreHTML +
-        '<p class="section-hint" style="margin-top:16px; margin-bottom:8px"><strong>Thematic Core (pick 1):</strong></p>' + thematicHTML;
+        '<p class="section-hint" style="margin-top:16px; margin-bottom:8px"><strong>Recommended Thematic Core:</strong> ' + (thematicExplanations[thematic] || '') + '</p>' +
+        renderCourseItem(thematic, currentMajor);
 
-    // Interest-based recommendations
-    document.getElementById('exploreResultsRecommended').innerHTML = recommended.map(c => renderCourseItem(c, currentMajor)).join('');
+    // Interest-based recommendations — filter out rotating courses and already-shown courses
+    const alreadyShown = new Set(['SEVI 39303', thematic, ...overlaps]);
+    const filteredRecommended = recommended.filter(c => !alreadyShown.has(c));
+    document.getElementById('exploreResultsRecommended').innerHTML = filteredRecommended.map(c => renderCourseItem(c, currentMajor)).join('');
 
     // OEI recommendations
     const oeiRecs = getOEIRecommendations(selectedExploreInterests);
