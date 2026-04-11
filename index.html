@@ -97,7 +97,7 @@
             <!-- Build Q2: Interests -->
             <div class="question-card" id="build-q2" style="display:none">
                 <h2>What sounds most like you?</h2>
-                <p class="question-hint">Pick 2-3 that resonate</p>
+                <p class="question-hint">Rank your top 3 — click in order of importance (1st = most important)</p>
                 <div class="option-grid interest-grid">
                     <button class="option-btn interest-btn" data-value="start_own" onclick="toggleInterest(this)">
                         I want to start my own thing someday
@@ -207,7 +207,7 @@
             <!-- Explore Q2: Interests (same options, lighter framing) -->
             <div class="question-card" id="explore-q2" style="display:none">
                 <h2>What draws you to entrepreneurship?</h2>
-                <p class="question-hint">Pick 2-3 that resonate</p>
+                <p class="question-hint">Rank your top 3 — click in order of importance (1st = most important)</p>
                 <div class="option-grid interest-grid">
                     <button class="option-btn interest-btn" data-value="start_own" onclick="toggleExploreInterest(this)">
                         I want to start my own thing someday
@@ -285,6 +285,17 @@
                     <h3>Alternatives</h3>
                     <p class="section-hint">Other courses that might interest you</p>
                     <div id="buildResultsAlternatives"></div>
+                </div>
+
+                <div class="card results-section" id="buildRotatingSection">
+                    <h3>Also Worth Checking</h3>
+                    <p class="section-hint">These courses change topics each semester — check what's being offered next</p>
+                    <div class="rotating-note">
+                        <strong>SEVI 400H3</strong> — Honors Strategy, Innovation and Entrepreneurship Colloquium<br>
+                        <strong>MGMT 41003</strong> — Special Topics in Management<br>
+                        <strong>BUSI 300H3</strong> — Honors College Colloquium<br>
+                        <span style="margin-top:8px; display:block">These rotate each semester and may align perfectly with your interests. Check the course catalog or ask your advisor what's being offered.</span>
+                    </div>
                 </div>
 
                 <div class="card results-section" id="buildOEISection">

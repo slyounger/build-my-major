@@ -96,43 +96,71 @@ function selectSingle(btn, type) {
 function toggleInterest(btn) {
     const value = btn.dataset.value;
     if (btn.classList.contains('selected')) {
+        // Deselect and remove from list
         btn.classList.remove('selected');
+        btn.querySelector('.rank-badge')?.remove();
         selectedInterests = selectedInterests.filter(i => i !== value);
+        // Re-number remaining
+        updateRankBadges('#build-q2', selectedInterests);
     } else {
         if (selectedInterests.length >= 3) {
-            const firstValue = selectedInterests.shift();
-            document.querySelector('#build-q2 .interest-btn[data-value="' + firstValue + '"]').classList.remove('selected');
+            // Remove the last one to make room
+            const lastValue = selectedInterests.pop();
+            const lastBtn = document.querySelector('#build-q2 .interest-btn[data-value="' + lastValue + '"]');
+            lastBtn.classList.remove('selected');
+            lastBtn.querySelector('.rank-badge')?.remove();
         }
         btn.classList.add('selected');
         selectedInterests.push(value);
+        updateRankBadges('#build-q2', selectedInterests);
     }
     // Show/hide Other text field
     const otherField = document.getElementById('interestOtherField');
     otherField.style.display = selectedInterests.includes('other') ? 'block' : 'none';
     // Reset hint
     const hint = document.getElementById('build-q2').querySelector('.question-hint');
-    if (hint) { hint.textContent = 'Pick 2-3 that resonate'; hint.style.color = ''; }
+    if (hint) { hint.textContent = 'Rank your top 3 — click in order of importance (1st = most important)'; hint.style.color = ''; }
 }
 
 function toggleExploreInterest(btn) {
     const value = btn.dataset.value;
     if (btn.classList.contains('selected')) {
         btn.classList.remove('selected');
+        btn.querySelector('.rank-badge')?.remove();
         selectedExploreInterests = selectedExploreInterests.filter(i => i !== value);
+        updateRankBadges('#explore-q2', selectedExploreInterests);
     } else {
         if (selectedExploreInterests.length >= 3) {
-            const firstValue = selectedExploreInterests.shift();
-            document.querySelector('#explore-q2 .interest-btn[data-value="' + firstValue + '"]').classList.remove('selected');
+            const lastValue = selectedExploreInterests.pop();
+            const lastBtn = document.querySelector('#explore-q2 .interest-btn[data-value="' + lastValue + '"]');
+            lastBtn.classList.remove('selected');
+            lastBtn.querySelector('.rank-badge')?.remove();
         }
         btn.classList.add('selected');
         selectedExploreInterests.push(value);
+        updateRankBadges('#explore-q2', selectedExploreInterests);
     }
     // Show/hide Other text field
     const otherField = document.getElementById('exploreInterestOtherField');
     otherField.style.display = selectedExploreInterests.includes('other') ? 'block' : 'none';
     // Reset hint
     const hint = document.getElementById('explore-q2').querySelector('.question-hint');
-    if (hint) { hint.textContent = 'Pick 2-3 that resonate'; hint.style.color = ''; }
+    if (hint) { hint.textContent = 'Rank your top 3 — click in order of importance (1st = most important)'; hint.style.color = ''; }
+}
+
+function updateRankBadges(containerSelector, interests) {
+    // Remove all existing badges in container
+    document.querySelectorAll(containerSelector + ' .rank-badge').forEach(b => b.remove());
+    // Add new badges
+    interests.forEach((value, idx) => {
+        const btn = document.querySelector(containerSelector + ' .interest-btn[data-value="' + value + '"]');
+        if (btn) {
+            const badge = document.createElement('span');
+            badge.className = 'rank-badge';
+            badge.textContent = (idx + 1);
+            btn.prepend(badge);
+        }
+    });
 }
 
 // --- Dropdown Other handlers ---
@@ -152,7 +180,7 @@ document.getElementById('exploreMajor').addEventListener('change', function() {
 function generateBuildResults() {
     if (selectedInterests.length < 2) {
         const hint = document.getElementById('build-q2').querySelector('.question-hint');
-        hint.textContent = 'Please pick at least 2';
+        hint.textContent = 'Please rank at least 2';
         hint.style.color = '#c0392b';
         return;
     }
@@ -220,7 +248,7 @@ function generateBuildResults() {
 function generateExploreResults() {
     if (selectedExploreInterests.length < 2) {
         const hint = document.getElementById('explore-q2').querySelector('.question-hint');
-        hint.textContent = 'Please pick at least 2';
+        hint.textContent = 'Please rank at least 2';
         hint.style.color = '#c0392b';
         return;
     }

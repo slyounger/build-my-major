@@ -428,6 +428,42 @@ body {
     white-space: nowrap;
 }
 
+/* Rank Badges */
+.rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--white);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+.option-btn.selected .rank-badge {
+    background: var(--white);
+    color: var(--accent);
+}
+
+/* Rotating Courses Note */
+.rotating-note {
+    padding: 16px;
+    background: var(--accent-light);
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    color: var(--dark-gray);
+    line-height: 1.5;
+    margin-top: 8px;
+}
+
+.rotating-note strong {
+    color: var(--text);
+}
+
 /* OEI Program Items */
 .oei-item {
     display: block;

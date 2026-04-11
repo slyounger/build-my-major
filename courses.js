@@ -313,8 +313,8 @@ const TRACK_MAP = {
     "SEVI 32303":  ["corporate"],
     "SEVI 36703":  ["social"],
     "SEVI 44303":  ["new_venture"],
-    "SEVI 400H3":  ["new_venture", "corporate", "social"],
-    "MGMT 41003":  ["new_venture", "corporate", "social"],
+    "SEVI 400H3":  ["rotating"],   // Honors — topic changes each semester
+    "MGMT 41003":  ["rotating"],   // Special Topics — changes each semester
     "MGMT 42503":  ["new_venture", "corporate", "social"],
     "MGMT 42603":  ["corporate"],
     "SEVI 45403":  ["new_venture", "corporate"],
@@ -340,12 +340,12 @@ const TRACK_MAP = {
     "SCMT 36103":  ["new_venture", "corporate"],
     "SCMT 36203":  ["new_venture", "corporate"],
     "SCMT 46503":  ["new_venture", "corporate"],
-    "SEVI 20703":  ["new_venture", "corporate", "social"],
+    "SEVI 20703":  ["outdoors"],
     "SEVI 42303":  ["corporate"],
-    "SEVI 47003":  ["new_venture", "corporate", "social"],
-    "SEVI 47103":  ["new_venture", "corporate"],
-    "BUSI 300H3":  ["new_venture", "corporate", "social"],
-    "BUSI 30203":  ["new_venture", "corporate", "social"]
+    "SEVI 47003":  ["outdoors"],
+    "SEVI 47103":  ["outdoors", "corporate"],
+    "BUSI 300H3":  ["rotating"],   // Honors — topic changes each semester
+    "BUSI 30203":  ["social"]      // Sustainability fits social track specifically
 };
 
 // Interest-to-track mapping
@@ -364,12 +364,13 @@ const INTEREST_TRACKS = {
 };
 
 // Build a course list from interests via tracks
-// Courses score higher when they match MORE of the student's relevant tracks
+// Rank 1 = strongest weight, Rank 3 = lightest
 function getInterestCourses(interests) {
-    // First, figure out which tracks matter and their weights
+    // Weight by rank: 1st pick = 6, 2nd = 3, 3rd = 1
+    const rankWeights = [6, 3, 1];
     const trackScores = {};
     interests.forEach((interest, idx) => {
-        const weight = interests.length - idx; // first pick = highest weight
+        const weight = rankWeights[idx] || 1;
         (INTEREST_TRACKS[interest] || []).forEach(track => {
             trackScores[track] = (trackScores[track] || 0) + weight;
         });
