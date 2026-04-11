@@ -348,43 +348,91 @@ const TRACK_MAP = {
     "BUSI 30203":  ["social"]      // Sustainability fits social track specifically
 };
 
-// Interest-to-track mapping
-const INTEREST_TRACKS = {
-    start_own:      ["new_venture"],
-    products_ideas: ["corporate", "new_venture"],
-    social_impact:  ["social"],
-    money_funding:  ["new_venture"],
-    marketing:      ["corporate", "new_venture"],
-    leadership:     ["new_venture", "corporate"],
-    outdoors:       ["new_venture", "corporate", "social"],
-    global:         ["corporate", "social"],
-    operations:     ["corporate", "new_venture"],
-    numbers:        ["new_venture"],
-    other:          []
+// Direct interest-to-course mapping
+// Each interest maps to the specific courses most relevant to it
+const INTEREST_COURSES = {
+    start_own: [
+        "SEVI 44303",  // Small Enterprise Management
+        "SEVI 49903",  // Entrepreneurship Practicum
+        "FINN 42403",  // New Venture Finance
+        "FINN 41203",  // Valuing New Ventures
+        "BLAW 30303",  // Commercial Law
+        "ACCT 38403",  // Fundamentals of Taxation
+    ],
+    products_ideas: [
+        "SEVI 32303",  // Corporate Innovation
+        "SEVI 42303",  // Corporate Innovation II
+        "SEVI 45403",  // SAKE Product Innovation Lab
+        "MKTG 44503",  // New Product Development
+        "SEVI 47103",  // Outdoor Industries Product Innovation Studio
+    ],
+    social_impact: [
+        "SEVI 36703",  // Social Entrepreneurship
+        "BUSI 30203",  // Sustainability in Business
+        "SEVI 45803",  // International Management
+        "MKTG 46303",  // Global Marketing
+    ],
+    money_funding: [
+        "FINN 41203",  // Valuing New Ventures
+        "FINN 42403",  // New Venture Finance
+        "FINN 30503",  // Financial Markets and Institutions
+        "FINN 36203",  // Risk Management
+        "FINN 39303",  // Real Estate Principles
+        "ACCT 37203",  // Intermediate Accounting I
+    ],
+    marketing: [
+        "MKTG 35503",  // Consumer Behavior
+        "MKTG 42303",  // Integrated Marketing Communications
+        "MKTG 43403",  // Selling and Sales Management
+        "MKTG 44303",  // Retail Strategy
+        "MKTG 44503",  // New Product Development
+        "MKTG 46303",  // Global Marketing
+    ],
+    leadership: [
+        "MGMT 42503",  // Leadership
+        "MGMT 42603",  // Organizational Change and Development
+        "MGMT 49403",  // Talent Acquisition and Management
+        "MGMT 49503",  // Organizational Rewards and Compensation
+    ],
+    outdoors: [
+        "SEVI 20703",  // Introduction to Outdoor Recreation Industries
+        "SEVI 47003",  // Outdoor Industries Capstone Experience
+        "SEVI 47103",  // Outdoor Industries Product Innovation Studio
+    ],
+    global: [
+        "SEVI 45803",  // International Management
+        "MKTG 46303",  // Global Marketing
+        "SEVI 47003",  // Outdoor Industries Capstone
+    ],
+    operations: [
+        "SCMT 36103",  // SOURCE: Procurement and Supply Management
+        "SCMT 36203",  // PLAN: Inventory and Forecasting Analytics
+        "SCMT 46503",  // Supply Chain Strategy and Change Management
+        "FINN 36203",  // Risk Management
+        "ISYS 22603",  // Principles of Information Systems
+    ],
+    numbers: [
+        "ACCT 37203",  // Intermediate Accounting I
+        "ACCT 38403",  // Fundamentals of Taxation I
+        "BLAW 30303",  // Commercial Law
+        "FINN 30503",  // Financial Markets and Institutions
+    ],
+    other: []
 };
 
-// Build a course list from interests via tracks
-// Rank 1 = strongest weight, Rank 3 = lightest
+// Score courses based on ranked interests
+// Rank 1 = 6 points, Rank 2 = 3 points, Rank 3 = 1 point
 function getInterestCourses(interests) {
-    // Weight by rank: 1st pick = 6, 2nd = 3, 3rd = 1
     const rankWeights = [6, 3, 1];
-    const trackScores = {};
+    const courseScores = {};
+
     interests.forEach((interest, idx) => {
         const weight = rankWeights[idx] || 1;
-        (INTEREST_TRACKS[interest] || []).forEach(track => {
-            trackScores[track] = (trackScores[track] || 0) + weight;
+        (INTEREST_COURSES[interest] || []).forEach(code => {
+            courseScores[code] = (courseScores[code] || 0) + weight;
         });
     });
 
-    // Now score each course based on how well it matches the weighted tracks
-    const courseScores = {};
-    for (const [code, tracks] of Object.entries(TRACK_MAP)) {
-        let score = 0;
-        tracks.forEach(track => {
-            if (trackScores[track]) score += trackScores[track];
-        });
-        if (score > 0) courseScores[code] = score;
-    }
     return courseScores;
 }
 

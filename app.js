@@ -188,12 +188,24 @@ function generateBuildResults() {
     const name = document.getElementById('buildName').value.trim();
     const secondaryMajor = getBuildSecondaryMajor();
 
-    // Score courses using track-based logic
+    // Score courses based on ranked interests
     const scores = getInterestCourses(selectedInterests);
 
-    // Pick thematic based on dominant track
-    const thematicOptions = Object.keys(COURSES).filter(c => COURSES[c].groups.includes('thematic'));
-    const thematic = thematicOptions.sort((a, b) => (scores[b] || 0) - (scores[a] || 0))[0];
+    // Pick thematic based on #1 ranked interest
+    const thematicForInterest = {
+        start_own: 'SEVI 44303',
+        products_ideas: 'SEVI 32303',
+        social_impact: 'SEVI 36703',
+        money_funding: 'SEVI 44303',
+        marketing: 'SEVI 32303',
+        leadership: 'SEVI 32303',
+        outdoors: 'SEVI 44303',
+        global: 'SEVI 36703',
+        operations: 'SEVI 32303',
+        numbers: 'SEVI 44303',
+        other: 'SEVI 44303'
+    };
+    const thematic = thematicForInterest[selectedInterests[0]] || 'SEVI 44303';
 
     // Identify double-count courses for secondary major
     const doubleCounts = (secondaryMajor && DOUBLE_COUNT[secondaryMajor]) ? DOUBLE_COUNT[secondaryMajor] : [];
@@ -267,7 +279,7 @@ function generateExploreResults() {
     // Find overlapping courses
     const overlaps = (DOUBLE_COUNT[currentMajor] || []);
 
-    // Score courses using track-based logic
+    // Score courses based on ranked interests
     const scores = getInterestCourses(selectedExploreInterests);
 
     // Top recommended based on interests
@@ -276,9 +288,21 @@ function generateExploreResults() {
         .sort((a, b) => (scores[b] || 0) - (scores[a] || 0))
         .slice(0, 5);
 
-    // Pick thematic based on dominant track
-    const thematicOptions = Object.keys(COURSES).filter(c => COURSES[c].groups.includes('thematic'));
-    const thematic = thematicOptions.sort((a, b) => (scores[b] || 0) - (scores[a] || 0))[0];
+    // Pick thematic based on #1 ranked interest
+    const thematicForInterest = {
+        start_own: 'SEVI 44303',
+        products_ideas: 'SEVI 32303',
+        social_impact: 'SEVI 36703',
+        money_funding: 'SEVI 44303',
+        marketing: 'SEVI 32303',
+        leadership: 'SEVI 32303',
+        outdoors: 'SEVI 44303',
+        global: 'SEVI 36703',
+        operations: 'SEVI 32303',
+        numbers: 'SEVI 44303',
+        other: 'SEVI 44303'
+    };
+    const thematic = thematicForInterest[selectedExploreInterests[0]] || 'SEVI 44303';
 
     const thematicExplanations = {
         'SEVI 44303': 'Small Enterprise Management — focuses on the practical challenges of starting and running a business.',
