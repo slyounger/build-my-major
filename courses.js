@@ -306,20 +306,86 @@ const COURSES = {
     }
 };
 
-// Interest-to-course mapping
-const INTEREST_MAP = {
-    start_own: ["SEVI 39303", "SEVI 44303", "SEVI 49903", "FINN 42403", "FINN 41203", "BLAW 30303"],
-    products_ideas: ["SEVI 32303", "SEVI 42303", "SEVI 45403", "MKTG 44503", "SEVI 47103"],
-    social_impact: ["SEVI 36703", "BUSI 30203", "SEVI 45803"],
-    money_funding: ["FINN 41203", "FINN 42403", "FINN 30503", "FINN 36203", "FINN 39303", "ACCT 37203"],
-    marketing: ["MKTG 35503", "MKTG 42303", "MKTG 43403", "MKTG 44303", "MKTG 44503", "MKTG 46303"],
-    leadership: ["MGMT 42503", "MGMT 42603", "MGMT 49403", "MGMT 49503"],
-    outdoors: ["SEVI 20703", "SEVI 47003", "SEVI 47103"],
-    global: ["SEVI 45803", "MKTG 46303", "SEVI 47003"],
-    operations: ["SCMT 36103", "SCMT 36203", "SCMT 46503", "FINN 36203"],
-    numbers: ["ACCT 37203", "ACCT 38403", "BLAW 30303", "FINN 30503"],
-    other: []
+// Track designations from faculty (Shannon Younger's classification)
+// Each course is tagged with which track(s) it belongs to
+const TRACK_MAP = {
+    "SEVI 39303":  ["new_venture", "corporate", "social"],  // Required for all
+    "SEVI 32303":  ["corporate"],
+    "SEVI 36703":  ["social"],
+    "SEVI 44303":  ["new_venture"],
+    "SEVI 400H3":  ["new_venture", "corporate", "social"],
+    "MGMT 41003":  ["new_venture", "corporate", "social"],
+    "MGMT 42503":  ["new_venture", "corporate", "social"],
+    "MGMT 42603":  ["corporate"],
+    "SEVI 45403":  ["new_venture", "corporate"],
+    "SEVI 45803":  ["corporate", "social"],
+    "MGMT 49403":  ["corporate"],
+    "MGMT 49503":  ["corporate"],
+    "SEVI 49903":  ["new_venture"],
+    "ACCT 37203":  ["new_venture"],
+    "ACCT 38403":  ["new_venture"],
+    "BLAW 30303":  ["new_venture", "corporate"],
+    "FINN 30503":  ["new_venture", "corporate"],
+    "FINN 36203":  ["new_venture", "corporate"],
+    "FINN 39303":  ["new_venture"],
+    "FINN 41203":  ["new_venture"],
+    "FINN 42403":  ["new_venture"],
+    "ISYS 22603":  ["new_venture", "corporate"],
+    "MKTG 35503":  ["new_venture", "corporate"],
+    "MKTG 42303":  ["new_venture", "corporate"],
+    "MKTG 43403":  ["new_venture", "corporate"],
+    "MKTG 44303":  ["new_venture", "corporate"],
+    "MKTG 44503":  ["new_venture", "corporate"],
+    "MKTG 46303":  ["corporate", "social"],
+    "SCMT 36103":  ["new_venture", "corporate"],
+    "SCMT 36203":  ["new_venture", "corporate"],
+    "SCMT 46503":  ["new_venture", "corporate"],
+    "SEVI 20703":  ["new_venture", "corporate", "social"],
+    "SEVI 42303":  ["corporate"],
+    "SEVI 47003":  ["new_venture", "corporate", "social"],
+    "SEVI 47103":  ["new_venture", "corporate"],
+    "BUSI 300H3":  ["new_venture", "corporate", "social"],
+    "BUSI 30203":  ["new_venture", "corporate", "social"]
 };
+
+// Interest-to-track mapping
+const INTEREST_TRACKS = {
+    start_own:      ["new_venture"],
+    products_ideas: ["corporate", "new_venture"],
+    social_impact:  ["social"],
+    money_funding:  ["new_venture"],
+    marketing:      ["corporate", "new_venture"],
+    leadership:     ["new_venture", "corporate"],
+    outdoors:       ["new_venture", "corporate", "social"],
+    global:         ["corporate", "social"],
+    operations:     ["corporate", "new_venture"],
+    numbers:        ["new_venture"],
+    other:          []
+};
+
+// Build a course list from interests via tracks
+// Courses score higher when they match MORE of the student's relevant tracks
+function getInterestCourses(interests) {
+    // First, figure out which tracks matter and their weights
+    const trackScores = {};
+    interests.forEach((interest, idx) => {
+        const weight = interests.length - idx; // first pick = highest weight
+        (INTEREST_TRACKS[interest] || []).forEach(track => {
+            trackScores[track] = (trackScores[track] || 0) + weight;
+        });
+    });
+
+    // Now score each course based on how well it matches the weighted tracks
+    const courseScores = {};
+    for (const [code, tracks] of Object.entries(TRACK_MAP)) {
+        let score = 0;
+        tracks.forEach(track => {
+            if (trackScores[track]) score += trackScores[track];
+        });
+        if (score > 0) courseScores[code] = score;
+    }
+    return courseScores;
+}
 
 // Double-count mapping: courses that are REQUIRED in other majors
 const DOUBLE_COUNT = {

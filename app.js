@@ -160,45 +160,37 @@ function generateBuildResults() {
     const name = document.getElementById('buildName').value.trim();
     const secondaryMajor = getBuildSecondaryMajor();
 
-    // Score courses
-    const scores = {};
-    for (const code of Object.keys(COURSES)) scores[code] = 0;
+    // Score courses using track-based logic
+    const scores = getInterestCourses(selectedInterests);
 
-    selectedInterests.forEach((interest, idx) => {
-        const weight = selectedInterests.length - idx;
-        (INTEREST_MAP[interest] || []).forEach(code => {
-            if (scores[code] !== undefined) scores[code] += weight;
-        });
-    });
-
-    // Pick thematic
+    // Pick thematic based on dominant track
     const thematicOptions = Object.keys(COURSES).filter(c => COURSES[c].groups.includes('thematic'));
-    const thematic = thematicOptions.sort((a, b) => scores[b] - scores[a])[0];
+    const thematic = thematicOptions.sort((a, b) => (scores[b] || 0) - (scores[a] || 0))[0];
 
-    // Pick Group 1
+    // Pick Group 1 — top 3 from track-matched courses
     const group1 = Object.keys(COURSES)
         .filter(c => COURSES[c].groups.includes('group1') && c !== thematic)
-        .sort((a, b) => scores[b] - scores[a])
+        .sort((a, b) => (scores[b] || 0) - (scores[a] || 0))
         .slice(0, 3);
 
-    // Pick Group 2 (boost double-counts)
+    // Pick Group 2 — boost double-counts for secondary major
     const group2 = Object.keys(COURSES)
         .filter(c => COURSES[c].groups.includes('group2'))
         .sort((a, b) => {
-            let sa = scores[a], sb = scores[b];
+            let sa = scores[a] || 0, sb = scores[b] || 0;
             if (secondaryMajor && DOUBLE_COUNT[secondaryMajor]) {
-                if (DOUBLE_COUNT[secondaryMajor].includes(a)) sa += 5;
-                if (DOUBLE_COUNT[secondaryMajor].includes(b)) sb += 5;
+                if (DOUBLE_COUNT[secondaryMajor].includes(a)) sa += 10;
+                if (DOUBLE_COUNT[secondaryMajor].includes(b)) sb += 10;
             }
             return sb - sa;
         })
         .slice(0, 3);
 
-    // Alternatives
+    // Alternatives — next best courses not already selected
     const selected = new Set([thematic, ...group1, ...group2, "SEVI 39303"]);
     const alternatives = Object.keys(COURSES)
-        .filter(c => !selected.has(c) && scores[c] > 0)
-        .sort((a, b) => scores[b] - scores[a])
+        .filter(c => !selected.has(c) && (scores[c] || 0) > 0)
+        .sort((a, b) => (scores[b] || 0) - (scores[a] || 0))
         .slice(0, 3);
 
     // Narrative
@@ -239,21 +231,13 @@ function generateExploreResults() {
     // Find overlapping courses
     const overlaps = (DOUBLE_COUNT[currentMajor] || []);
 
-    // Score courses based on interests
-    const scores = {};
-    for (const code of Object.keys(COURSES)) scores[code] = 0;
-
-    selectedExploreInterests.forEach((interest, idx) => {
-        const weight = selectedExploreInterests.length - idx;
-        (INTEREST_MAP[interest] || []).forEach(code => {
-            if (scores[code] !== undefined) scores[code] += weight;
-        });
-    });
+    // Score courses using track-based logic
+    const scores = getInterestCourses(selectedExploreInterests);
 
     // Top recommended based on interests
     const recommended = Object.keys(COURSES)
-        .filter(c => scores[c] > 0 && c !== 'SEVI 39303')
-        .sort((a, b) => scores[b] - scores[a])
+        .filter(c => (scores[c] || 0) > 0 && c !== 'SEVI 39303')
+        .sort((a, b) => (scores[b] || 0) - (scores[a] || 0))
         .slice(0, 5);
 
     // Build narrative
@@ -386,11 +370,14 @@ function getOEIRecommendations(interests) {
         });
     });
 
-    // Return top 3-4 unique programs
+    // Return top 4 unique programs
     return Object.keys(scores)
         .sort((a, b) => scores[b] - scores[a])
         .slice(0, 4);
 }
+
+// Keep OEI_MAP for direct interest-to-program mapping (not track-based)
+// since OEI programs don't map cleanly to the three academic tracks
 
 function renderOEIItem(programId) {
     const program = OEI_PROGRAMS[programId];
