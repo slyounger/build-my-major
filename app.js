@@ -224,9 +224,17 @@ function generateBuildResults() {
     // Narrative
     const narrative = buildNarrative(name, selectedInterests, secondaryMajor);
 
+    // Thematic core explanation
+    const thematicExplanations = {
+        'SEVI 44303': 'Based on your interests, Small Enterprise Management is your best thematic fit — it focuses on the practical challenges of starting and running a business.',
+        'SEVI 32303': 'Based on your interests, Corporate Innovation is your best thematic fit — it focuses on how established companies innovate, fail, and succeed.',
+        'SEVI 36703': 'Based on your interests, Social Entrepreneurship is your best thematic fit — it explores how to build ventures that create social value alongside economic value.'
+    };
+
     // Render
     document.getElementById('buildResultsNarrative').innerHTML = '<p>' + narrative + '</p>';
     document.getElementById('buildResultsRequired').innerHTML = renderCourseItem('SEVI 39303', secondaryMajor);
+    document.getElementById('buildThematicExplanation').textContent = thematicExplanations[thematic] || '';
     document.getElementById('buildResultsThematic').innerHTML = renderCourseItem(thematic, secondaryMajor);
     document.getElementById('buildResultsGroup1').innerHTML = group1.map(c => renderCourseItem(c, secondaryMajor)).join('');
     document.getElementById('buildResultsGroup2').innerHTML = group2.map(c => renderCourseItem(c, secondaryMajor)).join('');
@@ -322,52 +330,71 @@ function getExploreMajor() {
 }
 
 function buildNarrative(name, interests, secondaryMajor) {
-    const desc = {
-        start_own: "you're someone with an entrepreneurial drive who wants to build something of your own",
-        products_ideas: "you're energized by the process of turning ideas into real products",
-        social_impact: "making a meaningful difference in the world matters deeply to you",
-        money_funding: "you want to understand the financial engine behind businesses and deals",
-        marketing: "you're curious about what drives people to buy and how brands connect with customers",
-        leadership: "you see yourself leading teams and shaping how organizations work",
-        outdoors: "the outdoor industry is where your passion and career ambitions meet",
-        global: "you're drawn to the complexity and opportunity of global business",
-        operations: "you're fascinated by the systems and logistics that make businesses run",
-        numbers: "you want a solid grounding in the numbers side of business — accounting, tax, and law",
-        other: "you have unique interests that go beyond the typical tracks"
+    // Build a cohesive story based on the COMBINATION of interests, not just listing them
+    const comboPhrases = {
+        // Two-interest combos that tell a story
+        'start_own+money_funding': 'You want to build your own venture and you know that understanding money — how to raise it, manage it, and grow it — is what separates ideas that launch from ideas that stall. This course set gives you both the startup toolkit and the financial fluency to fund and sustain what you build.',
+        'start_own+marketing': 'You want to build your own thing, and you get that a great product means nothing if nobody buys it. This set pairs startup fundamentals with deep marketing and consumer insight so you\'re not just building — you\'re building something people actually want.',
+        'start_own+leadership': 'You want to build something of your own and lead the team that makes it happen. This course set gives you the venture-building fundamentals alongside the people skills — hiring, managing, motivating — that turn a solo idea into a real organization.',
+        'start_own+global': 'You want to build a venture and you\'re thinking bigger than your backyard. This set gives you startup fundamentals with a global lens — understanding international markets, cross-cultural strategy, and how to scale beyond borders.',
+        'start_own+operations': 'You want to build a business and you care about how it actually runs day to day. This set pairs venture-building with the operational backbone — supply chain, procurement, logistics — that turns a concept into a functioning company.',
+        'start_own+numbers': 'You want to start something and you want to understand the numbers behind it — not just revenue, but tax implications, legal structures, and financial reporting. This is a smart, practical combination.',
+        'products_ideas+marketing': 'You love the process of bringing new things to life, and you want to make sure they land with real customers. This set connects product innovation with consumer insight and brand strategy — the full pipeline from idea to market.',
+        'products_ideas+leadership': 'You\'re drawn to innovation and you want to lead the teams that make it happen. This set builds your product development skills alongside organizational leadership — the combination that defines product managers and innovation leads.',
+        'social_impact+global': 'You want to make a difference, and you see that as a global challenge. This set connects social entrepreneurship with international strategy — preparing you to build organizations that create impact across borders.',
+        'social_impact+leadership': 'You care about impact and you want to lead organizations that deliver it. This pairs social entrepreneurship with the people and change management skills that mission-driven leaders need.',
+        'marketing+global': 'You\'re fascinated by what makes people buy, and you see that playing out differently across cultures and markets. This set deepens your consumer insight while building your global marketing strategy toolkit.',
+        'leadership+operations': 'You want to lead organizations and you care about how they actually work. This pairs people leadership with operational strategy — the combination that defines strong general managers.',
     };
 
-    const careerPrep = {
-        start_own: "evaluate new venture opportunities, build business plans, and navigate the early stages of launching a company",
-        products_ideas: "lead product development from ideation through launch — skills that companies like P&G, startups, and innovation labs actively recruit for",
-        social_impact: "build and lead mission-driven organizations, measure social impact, and make the case for sustainable business practices",
-        money_funding: "speak the language of investors, evaluate deals, and understand how startups get funded — critical whether you're raising capital or deploying it",
-        marketing: "understand customer behavior, build brand strategy, and communicate value — skills that translate to roles in brand management, sales, and growth",
-        leadership: "manage teams, navigate organizational change, and develop talent — the foundations of general management and executive leadership",
-        outdoors: "work at the intersection of business and the outdoors, from product innovation to industry partnerships — a growing sector with strong Northwest Arkansas ties",
-        global: "operate across cultures and markets, navigate international business environments, and develop strategies for global expansion",
-        operations: "optimize how businesses actually run — supply chains, procurement, logistics — skills in high demand across every industry",
-        numbers: "read financial statements, understand tax implications, and navigate business law — a foundation that strengthens any career path"
-    };
+    // Try to find a combo phrase
+    let text = 'Hey ' + name + '! ';
+    const key12 = interests[0] + '+' + interests[1];
+    const key21 = interests[1] + '+' + interests[0];
+    const comboPhrase = comboPhrases[key12] || comboPhrases[key21];
 
-    const parts = interests.map(i => desc[i]).filter(Boolean);
-    let text = 'Hey ' + name + '! Based on what you told us, it sounds like ' + parts[0];
-    if (parts.length === 2) text += ', and ' + parts[1];
-    else if (parts.length === 3) text += ', ' + parts[1] + ', and ' + parts[2];
-    text += '.';
-
-    // Career preparation paragraph
-    const prepParts = interests.map(i => careerPrep[i]).filter(Boolean);
-    if (prepParts.length > 0) {
-        text += ' A major shaped like this would prepare you to ' + prepParts[0];
-        if (prepParts.length === 2) text += ', and ' + prepParts[1];
-        else if (prepParts.length === 3) text += '; ' + prepParts[1] + '; and ' + prepParts[2];
-        text += '.';
+    if (comboPhrase) {
+        text += comboPhrase;
+        if (interests[2]) {
+            const thirdDesc = {
+                start_own: 'an entrepreneurial drive',
+                products_ideas: 'a passion for product innovation',
+                social_impact: 'a commitment to social impact',
+                money_funding: 'financial acumen',
+                marketing: 'marketing savvy',
+                leadership: 'leadership ambitions',
+                outdoors: 'a connection to the outdoor industry',
+                global: 'a global perspective',
+                operations: 'operational thinking',
+                numbers: 'a head for numbers and legal detail',
+                other: 'unique additional interests'
+            };
+            text += ' We\'ve also woven in courses that reflect ' + (thirdDesc[interests[2]] || 'your additional interests') + '.';
+        }
+    } else {
+        // Fallback: build from individual descriptions
+        const desc = {
+            start_own: 'you want to build something of your own',
+            products_ideas: 'you\'re energized by turning ideas into real products',
+            social_impact: 'making a meaningful difference matters deeply to you',
+            money_funding: 'you want to understand how money and deals work',
+            marketing: 'you\'re curious about what drives people to buy',
+            leadership: 'you see yourself leading teams and shaping organizations',
+            outdoors: 'the outdoor industry is where your passion meets your career',
+            global: 'you\'re drawn to global business',
+            operations: 'you\'re fascinated by how things actually get done behind the scenes',
+            numbers: 'you want a solid grounding in the numbers side of business',
+            other: 'you have interests that go beyond the typical paths'
+        };
+        const parts = interests.map(i => desc[i]).filter(Boolean);
+        text += 'Based on what you told us, ' + parts[0];
+        if (parts.length === 2) text += ', and ' + parts[1];
+        else if (parts.length === 3) text += ', ' + parts[1] + ', and ' + parts[2];
+        text += '. We\'ve built a course set that brings these interests together into a coherent major.';
     }
 
-    text += ' Here\'s a set of courses we think will serve you well — they\'re tailored to your interests while keeping you on track with your SEVI major requirements.';
-
     if (secondaryMajor && DOUBLE_COUNT[secondaryMajor]) {
-        text += ' Since you\'re also pursuing ' + secondaryMajor + ', we\'ve highlighted courses that count toward both majors so you can make the most of every credit hour.';
+        text += ' Since you\'re also pursuing ' + secondaryMajor + ', we\'ve prioritized courses that count toward both majors — maximizing every credit hour.';
     }
     return text;
 }
