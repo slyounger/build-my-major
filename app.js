@@ -211,31 +211,38 @@ function generateBuildResults() {
     };
     const thematic = thematicForInterest[selectedInterests[0]] || 'SEVI 44303';
 
+    // Courses to exclude from recommendations (rotating/variable topics)
+    const ROTATING = ['SEVI 400H3', 'MGMT 41003', 'BUSI 300H3'];
+
     // Identify double-count courses for secondary major
     const doubleCounts = (secondaryMajor && DOUBLE_COUNT[secondaryMajor]) ? DOUBLE_COUNT[secondaryMajor] : [];
 
-    // Pick Group 1 — force in any double-count courses, fill remaining with top track-matched
-    const group1DoubleCounts = doubleCounts.filter(c => COURSES[c] && COURSES[c].groups.includes('group1') && c !== thematic);
-    const group1Remaining = Object.keys(COURSES)
-        .filter(c => COURSES[c].groups.includes('group1') && c !== thematic && !group1DoubleCounts.includes(c))
-        .sort((a, b) => (scores[b] || 0) - (scores[a] || 0))
-        .slice(0, 3 - group1DoubleCounts.length);
-    const group1 = [...group1DoubleCounts, ...group1Remaining];
+    // All eligible Group 1 courses (exclude thematic pick and rotating)
+    const allGroup1 = Object.keys(COURSES)
+        .filter(c => COURSES[c].groups.includes('group1') && c !== thematic && !ROTATING.includes(c))
+        .sort((a, b) => {
+            let sa = scores[a] || 0, sb = scores[b] || 0;
+            if (doubleCounts.includes(a)) sa += 10;
+            if (doubleCounts.includes(b)) sb += 10;
+            return sb - sa;
+        });
 
-    // Pick Group 2 — force in any double-count courses, fill remaining with top track-matched
-    const group2DoubleCounts = doubleCounts.filter(c => COURSES[c] && COURSES[c].groups.includes('group2'));
-    const group2Remaining = Object.keys(COURSES)
-        .filter(c => COURSES[c].groups.includes('group2') && !group2DoubleCounts.includes(c))
-        .sort((a, b) => (scores[b] || 0) - (scores[a] || 0))
-        .slice(0, Math.max(0, 3 - group2DoubleCounts.length));
-    const group2 = [...group2DoubleCounts, ...group2Remaining];
+    // Top 3 recommended, rest go to "other options"
+    const group1Recommended = allGroup1.slice(0, 3);
+    const group1Others = allGroup1.slice(3);
 
-    // Alternatives — next best courses not already selected
-    const selected = new Set([thematic, ...group1, ...group2, "SEVI 39303"]);
-    const alternatives = Object.keys(COURSES)
-        .filter(c => !selected.has(c) && (scores[c] || 0) > 0)
-        .sort((a, b) => (scores[b] || 0) - (scores[a] || 0))
-        .slice(0, 3);
+    // All eligible Group 2 courses (exclude rotating)
+    const allGroup2 = Object.keys(COURSES)
+        .filter(c => COURSES[c].groups.includes('group2') && !ROTATING.includes(c))
+        .sort((a, b) => {
+            let sa = scores[a] || 0, sb = scores[b] || 0;
+            if (doubleCounts.includes(a)) sa += 10;
+            if (doubleCounts.includes(b)) sb += 10;
+            return sb - sa;
+        });
+
+    const group2Recommended = allGroup2.slice(0, 3);
+    const group2Others = allGroup2.slice(3);
 
     // Narrative
     const narrative = buildNarrative(name, selectedInterests, secondaryMajor);
@@ -252,13 +259,10 @@ function generateBuildResults() {
     document.getElementById('buildResultsRequired').innerHTML = renderCourseItem('SEVI 39303', secondaryMajor);
     document.getElementById('buildThematicExplanation').textContent = thematicExplanations[thematic] || '';
     document.getElementById('buildResultsThematic').innerHTML = renderCourseItem(thematic, secondaryMajor);
-    document.getElementById('buildResultsGroup1').innerHTML = group1.map(c => renderCourseItem(c, secondaryMajor)).join('');
-    document.getElementById('buildResultsGroup2').innerHTML = group2.map(c => renderCourseItem(c, secondaryMajor)).join('');
-
-    if (alternatives.length > 0) {
-        document.getElementById('buildAlternativesSection').style.display = 'block';
-        document.getElementById('buildResultsAlternatives').innerHTML = alternatives.map(c => renderCourseItem(c, secondaryMajor)).join('');
-    }
+    document.getElementById('buildResultsGroup1').innerHTML = group1Recommended.map(c => renderCourseItem(c, secondaryMajor)).join('');
+    document.getElementById('buildGroup1Others').innerHTML = group1Others.map(c => renderCourseItem(c, secondaryMajor)).join('');
+    document.getElementById('buildResultsGroup2').innerHTML = group2Recommended.map(c => renderCourseItem(c, secondaryMajor)).join('');
+    document.getElementById('buildGroup2Others').innerHTML = group2Others.map(c => renderCourseItem(c, secondaryMajor)).join('');
 
     // Career report
     const careerReport = buildCareerReport(selectedInterests);
@@ -641,7 +645,6 @@ function retakeQuiz() {
     document.querySelectorAll('.rank-badge').forEach(b => b.remove());
     document.getElementById('interestOtherField').style.display = 'none';
     document.getElementById('exploreInterestOtherField').style.display = 'none';
-    document.getElementById('buildAlternativesSection').style.display = 'none';
     document.getElementById('exploreOverlapSection').style.display = 'none';
 
     showScreen('intro');

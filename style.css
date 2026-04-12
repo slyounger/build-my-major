@@ -492,6 +492,27 @@ body {
     line-height: 1.4;
 }
 
+/* Expandable Other Options */
+.other-options {
+    margin-top: 12px;
+}
+
+.other-options summary {
+    font-size: 0.9rem;
+    color: var(--accent);
+    cursor: pointer;
+    font-weight: 500;
+    padding: 8px 0;
+}
+
+.other-options summary:hover {
+    text-decoration: underline;
+}
+
+.other-options[open] summary {
+    margin-bottom: 8px;
+}
+
 /* Career Report */
 .career-report {
     border-left: 4px solid var(--success);
