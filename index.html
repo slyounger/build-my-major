@@ -257,8 +257,16 @@
         <!-- ============ RESULTS: BUILD PATH ============ -->
         <section id="results-build" class="screen">
             <div class="results-container">
+
+                <!-- Moment 1: We hear you -->
                 <div class="card results-narrative" id="buildResultsNarrative"></div>
 
+                <!-- Email button (top) -->
+                <div class="email-action">
+                    <button class="btn btn-outline" onclick="emailReport()">Email me this report</button>
+                </div>
+
+                <!-- Moment 2: Here's your major -->
                 <div class="card results-section">
                     <h3>Required</h3>
                     <div id="buildResultsRequired"></div>
@@ -271,14 +279,14 @@
                 </div>
 
                 <div class="card results-section">
-                    <h3>Recommended Electives — Group 1</h3>
-                    <p class="section-hint">SEVI & Management courses</p>
+                    <h3>Entrepreneurship Electives</h3>
+                    <p class="section-hint">Courses that deepen your entrepreneurial skills and knowledge</p>
                     <div id="buildResultsGroup1"></div>
                 </div>
 
                 <div class="card results-section">
-                    <h3>Recommended Electives — Group 2</h3>
-                    <p class="section-hint">Cross-department courses</p>
+                    <h3>Cross-Discipline Electives</h3>
+                    <p class="section-hint">Courses from across the Walton College that broaden your toolkit</p>
                     <div id="buildResultsGroup2"></div>
                 </div>
 
@@ -299,10 +307,21 @@
                     </div>
                 </div>
 
+                <!-- Moment 3: What this prepares you for -->
+                <div class="card results-section career-report" id="buildCareerSection">
+                    <h3>What This Prepares You For</h3>
+                    <p id="buildCareerReport"></p>
+                </div>
+
                 <div class="card results-section" id="buildOEISection">
                     <h3>Beyond the Classroom</h3>
                     <p class="section-hint">Programs through the Office of Entrepreneurship & Innovation that complement your interests</p>
                     <div id="buildResultsOEI"></div>
+                </div>
+
+                <!-- Email button (bottom) -->
+                <div class="email-action">
+                    <button class="btn btn-outline" onclick="emailReport()">Email me this report</button>
                 </div>
 
                 <div class="results-actions">

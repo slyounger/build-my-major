@@ -260,6 +260,10 @@ function generateBuildResults() {
         document.getElementById('buildResultsAlternatives').innerHTML = alternatives.map(c => renderCourseItem(c, secondaryMajor)).join('');
     }
 
+    // Career report
+    const careerReport = buildCareerReport(selectedInterests);
+    document.getElementById('buildCareerReport').textContent = careerReport;
+
     // OEI recommendations
     const oeiRecs = getOEIRecommendations(selectedInterests);
     document.getElementById('buildResultsOEI').innerHTML = oeiRecs.map(renderOEIItem).join('');
@@ -450,6 +454,106 @@ function renderCourseItem(code, otherMajor) {
         '<div><div class="course-code">' + code + '</div>' +
         '<div class="course-name">' + course.title + '</div></div>' +
         badge + '</div>';
+}
+
+// --- Career Report ---
+
+function buildCareerReport(interests) {
+    const careerSkills = {
+        start_own: 'evaluate new venture opportunities, build a business plan, and navigate the financial and legal challenges of launching a company. You\'ll be able to walk into investor meetings, accelerator applications, or your own garage startup with a real toolkit — not just enthusiasm.',
+        products_ideas: 'lead product development from concept to launch. You\'ll understand design thinking, stage-gate processes, and how to test ideas with real consumers before going to market. Companies hiring for product management, innovation labs, and R&D roles look for exactly this.',
+        social_impact: 'build and lead organizations that create measurable social impact alongside economic value. Whether it\'s a nonprofit, a B-corp, or a social venture, you\'ll understand how to make the case for doing well by doing good.',
+        money_funding: 'speak the language of investors and lenders. You\'ll understand term sheets, venture valuation, financial markets, and risk — whether you\'re raising capital for your own venture or analyzing deals for someone else\'s.',
+        marketing: 'understand why people buy what they buy and how to reach them. From consumer psychology to brand strategy to sales management, you\'ll have the toolkit for roles in brand management, digital marketing, sales leadership, and growth.',
+        leadership: 'manage teams, navigate organizational change, and build talent systems. These are the skills that define general managers and future executives — not just what you know, but how you lead people through complexity.',
+        outdoors: 'work at the intersection of business and the outdoor industry — from product innovation to company partnerships. Northwest Arkansas is a hub for this, and this coursework positions you for a growing sector with real local connections.',
+        global: 'operate across cultures, navigate international business environments, and build strategies for global markets. In an increasingly connected economy, this perspective sets you apart from peers who only think domestically.',
+        operations: 'optimize how businesses actually run — procurement, inventory, supply chain strategy. These skills are in high demand across every industry, and the analytical thinking transfers to consulting, operations management, and logistics leadership.',
+        numbers: 'read financial statements, understand tax implications, navigate contracts, and make legally informed business decisions. This practical foundation strengthens every career path and makes you a more credible voice in any room.'
+    };
+
+    let report = 'With this combination of courses, you\'ll be prepared to ';
+    const skills = interests.map(i => careerSkills[i]).filter(Boolean);
+
+    if (skills.length === 1) {
+        report += skills[0];
+    } else if (skills.length === 2) {
+        // Lead with #1 priority, add #2
+        report += skills[0] + ' You\'ll also ' + skills[1].charAt(0).toLowerCase() + skills[1].slice(1);
+    } else if (skills.length === 3) {
+        report += skills[0] + ' You\'ll also ' + skills[1].charAt(0).toLowerCase() + skills[1].slice(1) + ' And with your interest in ' + getInterestLabel(interests[2]) + ', you\'ll ' + skills[2].charAt(0).toLowerCase() + skills[2].slice(1);
+    }
+
+    return report;
+}
+
+function getInterestLabel(interest) {
+    const labels = {
+        start_own: 'building your own venture',
+        products_ideas: 'product innovation',
+        social_impact: 'social impact',
+        money_funding: 'finance and funding',
+        marketing: 'marketing',
+        leadership: 'leadership',
+        outdoors: 'the outdoor industry',
+        global: 'global business',
+        operations: 'operations',
+        numbers: 'the numbers side of business'
+    };
+    return labels[interest] || 'your additional interests';
+}
+
+// --- Email Report ---
+
+function emailReport() {
+    const name = currentPath === 'build'
+        ? document.getElementById('buildName').value.trim()
+        : document.getElementById('exploreName').value.trim();
+
+    const resultsContainer = currentPath === 'build'
+        ? document.getElementById('results-build')
+        : document.getElementById('results-explore');
+
+    // Build plain text version of the report
+    let body = 'Build My Major — Your Personalized SEVI Report\n';
+    body += '================================================\n\n';
+
+    // Get narrative
+    const narrativeEl = resultsContainer.querySelector('.results-narrative');
+    if (narrativeEl) body += narrativeEl.textContent + '\n\n';
+
+    // Get course sections
+    const sections = resultsContainer.querySelectorAll('.results-section');
+    sections.forEach(section => {
+        const title = section.querySelector('h3');
+        if (title) body += '--- ' + title.textContent + ' ---\n';
+        const items = section.querySelectorAll('.course-item');
+        items.forEach(item => {
+            const code = item.querySelector('.course-code');
+            const courseName = item.querySelector('.course-name');
+            if (code && courseName) body += code.textContent + ': ' + courseName.textContent + '\n';
+        });
+        // OEI items
+        const oeiItems = section.querySelectorAll('.oei-item');
+        oeiItems.forEach(item => {
+            const oeiName = item.querySelector('.oei-name');
+            if (oeiName) body += '- ' + oeiName.textContent + '\n';
+        });
+        // Rotating note
+        const rotatingNote = section.querySelector('.rotating-note');
+        if (rotatingNote) body += rotatingNote.textContent + '\n';
+        // Career report
+        const careerP = section.querySelector('#buildCareerReport');
+        if (careerP) body += careerP.textContent + '\n';
+        body += '\n';
+    });
+
+    body += '\n---\nGenerated by Build My Major | SEVI | Walton College of Business\n';
+
+    // Open mailto
+    const subject = encodeURIComponent('My SEVI Major Plan — Build My Major');
+    const encodedBody = encodeURIComponent(body);
+    window.location.href = 'mailto:?subject=' + subject + '&body=' + encodedBody;
 }
 
 // --- OEI Programs ---

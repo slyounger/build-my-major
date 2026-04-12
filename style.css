@@ -492,6 +492,45 @@ body {
     line-height: 1.4;
 }
 
+/* Career Report */
+.career-report {
+    border-left: 4px solid var(--success);
+}
+
+.career-report h3 {
+    color: var(--success);
+}
+
+.career-report p {
+    color: #555;
+    line-height: 1.7;
+    font-size: 0.95rem;
+}
+
+/* Email Action */
+.email-action {
+    text-align: center;
+    margin: 16px 0;
+}
+
+.btn-outline {
+    padding: 12px 24px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: 2px solid var(--accent);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+}
+
+.btn-outline:hover {
+    background: var(--accent);
+    color: var(--white);
+}
+
 /* Popover */
 .popover {
     position: fixed;
