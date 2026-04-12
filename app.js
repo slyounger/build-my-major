@@ -280,9 +280,7 @@ function generateExploreResults() {
     const overlaps = (DOUBLE_COUNT[currentMajor] || []);
 
     // Score courses based on ranked interests
-    console.log('EXPLORE interests:', selectedExploreInterests);
     const scores = getInterestCourses(selectedExploreInterests);
-    console.log('EXPLORE scores:', scores);
 
     // Top recommended based on interests
     const recommended = Object.keys(COURSES)
