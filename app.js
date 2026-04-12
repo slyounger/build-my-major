@@ -16,6 +16,10 @@ function showScreen(id) {
 
 function startPath(path) {
     currentPath = path;
+    selectedInterests = [];
+    selectedExploreInterests = [];
+    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+    document.querySelectorAll('.rank-badge').forEach(b => b.remove());
     if (path === 'build') {
         showScreen('quiz-build');
         document.getElementById('build-q1').style.display = 'block';
@@ -528,8 +532,9 @@ function retakeQuiz() {
     document.getElementById('exploreMajor').value = '';
     document.getElementById('exploreMajorOther').style.display = 'none';
 
-    // Clear all selections
+    // Clear all selections and rank badges
     document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+    document.querySelectorAll('.rank-badge').forEach(b => b.remove());
     document.getElementById('interestOtherField').style.display = 'none';
     document.getElementById('exploreInterestOtherField').style.display = 'none';
     document.getElementById('buildAlternativesSection').style.display = 'none';
