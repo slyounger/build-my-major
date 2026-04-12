@@ -227,9 +227,9 @@ function generateBuildResults() {
             return sb - sa;
         });
 
-    // Top 3 recommended, rest go to "other options"
+    // Top 3 recommended, rest that scored go to "other options"
     const group1Recommended = allGroup1.slice(0, 3);
-    const group1Others = allGroup1.slice(3);
+    const group1Others = allGroup1.slice(3).filter(c => (scores[c] || 0) > 0);
 
     // All eligible Group 2 courses (exclude rotating)
     const allGroup2 = Object.keys(COURSES)
@@ -242,7 +242,7 @@ function generateBuildResults() {
         });
 
     const group2Recommended = allGroup2.slice(0, 3);
-    const group2Others = allGroup2.slice(3);
+    const group2Others = allGroup2.slice(3).filter(c => (scores[c] || 0) > 0);
 
     // Narrative
     const narrative = buildNarrative(name, selectedInterests, secondaryMajor);
