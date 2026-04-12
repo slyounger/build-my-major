@@ -229,7 +229,7 @@ function generateBuildResults() {
 
     // Top 3 recommended, rest that scored go to "other options"
     const group1Recommended = allGroup1.slice(0, 3);
-    const group1Others = allGroup1.slice(3).filter(c => (scores[c] || 0) > 0);
+    const group1Others = allGroup1.slice(3).filter(c => (scores[c] || 0) > 0).slice(0, 3);
 
     // All eligible Group 2 courses (exclude rotating)
     const allGroup2 = Object.keys(COURSES)
@@ -242,7 +242,7 @@ function generateBuildResults() {
         });
 
     const group2Recommended = allGroup2.slice(0, 3);
-    const group2Others = allGroup2.slice(3).filter(c => (scores[c] || 0) > 0);
+    const group2Others = allGroup2.slice(3).filter(c => (scores[c] || 0) > 0).slice(0, 3);
 
     // Narrative
     const narrative = buildNarrative(name, selectedInterests, secondaryMajor);
@@ -260,9 +260,22 @@ function generateBuildResults() {
     document.getElementById('buildThematicExplanation').textContent = thematicExplanations[thematic] || '';
     document.getElementById('buildResultsThematic').innerHTML = renderCourseItem(thematic, secondaryMajor);
     document.getElementById('buildResultsGroup1').innerHTML = group1Recommended.map(c => renderCourseItem(c, secondaryMajor)).join('');
-    document.getElementById('buildGroup1Others').innerHTML = group1Others.map(c => renderCourseItem(c, secondaryMajor)).join('');
+    const g1OthersEl = document.getElementById('buildGroup1Others').closest('details');
+    if (group1Others.length > 0) {
+        g1OthersEl.style.display = 'block';
+        document.getElementById('buildGroup1Others').innerHTML = group1Others.map(c => renderCourseItem(c, secondaryMajor)).join('');
+    } else {
+        g1OthersEl.style.display = 'none';
+    }
+
     document.getElementById('buildResultsGroup2').innerHTML = group2Recommended.map(c => renderCourseItem(c, secondaryMajor)).join('');
-    document.getElementById('buildGroup2Others').innerHTML = group2Others.map(c => renderCourseItem(c, secondaryMajor)).join('');
+    const g2OthersEl = document.getElementById('buildGroup2Others').closest('details');
+    if (group2Others.length > 0) {
+        g2OthersEl.style.display = 'block';
+        document.getElementById('buildGroup2Others').innerHTML = group2Others.map(c => renderCourseItem(c, secondaryMajor)).join('');
+    } else {
+        g2OthersEl.style.display = 'none';
+    }
 
     // Career report
     const careerReport = buildCareerReport(selectedInterests);
