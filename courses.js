@@ -306,48 +306,6 @@ const COURSES = {
     }
 };
 
-// Track designations from faculty (Shannon Younger's classification)
-// Each course is tagged with which track(s) it belongs to
-const TRACK_MAP = {
-    "SEVI 39303":  ["new_venture", "corporate", "social"],  // Required for all
-    "SEVI 32303":  ["corporate"],
-    "SEVI 36703":  ["social"],
-    "SEVI 44303":  ["new_venture"],
-    "SEVI 400H3":  ["rotating"],   // Honors — topic changes each semester
-    "MGMT 41003":  ["rotating"],   // Special Topics — changes each semester
-    "MGMT 42503":  ["new_venture", "corporate", "social"],
-    "MGMT 42603":  ["corporate"],
-    "SEVI 45403":  ["new_venture", "corporate"],
-    "SEVI 45803":  ["corporate", "social"],
-    "MGMT 49403":  ["corporate"],
-    "MGMT 49503":  ["corporate"],
-    "SEVI 49903":  ["new_venture"],
-    "ACCT 37203":  ["new_venture"],
-    "ACCT 38403":  ["new_venture"],
-    "BLAW 30303":  ["new_venture", "corporate"],
-    "FINN 30503":  ["new_venture", "corporate"],
-    "FINN 36203":  ["new_venture", "corporate"],
-    "FINN 39303":  ["new_venture"],
-    "FINN 41203":  ["new_venture"],
-    "FINN 42403":  ["new_venture"],
-    "ISYS 22603":  ["new_venture", "corporate"],
-    "MKTG 35503":  ["new_venture", "corporate"],
-    "MKTG 42303":  ["new_venture", "corporate"],
-    "MKTG 43403":  ["new_venture", "corporate"],
-    "MKTG 44303":  ["new_venture", "corporate"],
-    "MKTG 44503":  ["new_venture", "corporate"],
-    "MKTG 46303":  ["corporate", "social"],
-    "SCMT 36103":  ["new_venture", "corporate"],
-    "SCMT 36203":  ["new_venture", "corporate"],
-    "SCMT 46503":  ["new_venture", "corporate"],
-    "SEVI 20703":  ["outdoors"],
-    "SEVI 42303":  ["corporate"],
-    "SEVI 47003":  ["outdoors"],
-    "SEVI 47103":  ["outdoors", "corporate"],
-    "BUSI 300H3":  ["rotating"],   // Honors — topic changes each semester
-    "BUSI 30203":  ["social"]      // Sustainability fits social track specifically
-};
-
 // Direct interest-to-course mapping
 // Each interest maps to the specific courses most relevant to it
 const INTEREST_COURSES = {
