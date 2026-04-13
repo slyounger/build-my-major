@@ -1,4 +1,4 @@
-// Make My Major — Course Data & Mapping
+// Build My Major — Course Data & Mapping
 
 const COURSES = {
     // Required
